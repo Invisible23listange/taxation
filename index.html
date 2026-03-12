@@ -102,7 +102,6 @@
             overflow-y: auto;
             padding: 60px 80px;
             box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-            /* Стабілізація: прибираємо сильний рух */
             animation: fadeIn 0.3s ease-out;
         }
 
@@ -199,6 +198,31 @@
         .wiki-card::-webkit-scrollbar { width: 10px; }
         .wiki-card::-webkit-scrollbar-track { background: #fdfdfd; }
         .wiki-card::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 5px; border: 2px solid #fdfdfd; }
+
+        /* Стилі для фінального слайду */
+        .thanks-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .thanks-title {
+            font-family: 'Linux Libertine', serif;
+            font-size: 5rem;
+            color: var(--accent-gold);
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .thanks-quote {
+            font-size: 1.8rem;
+            font-style: italic;
+            color: #333;
+            max-width: 800px;
+            margin-bottom: 3rem;
+        }
     </style>
 </head>
 <body>
@@ -215,6 +239,7 @@
             <button class="nav-btn" onclick="showSlide(6)">Теорія</button>
             <button class="nav-btn" onclick="showSlide(7)">Порівняння</button>
             <button class="nav-btn" onclick="showSlide(8)">Джерела</button>
+            <button class="nav-btn" onclick="showSlide(9)">09 Фінал</button>
         </div>
         
         <button class="fullscreen-toggle" onclick="toggleFullscreen()">
@@ -225,7 +250,7 @@
 
     <main class="main-display" id="main-content">
         
-        <!-- Слайд 1 -->
+        <!-- Слайд 1: Вступ -->
         <div class="wiki-card active" id="slide1">
             <h1 class="wiki-header">Історичні засади оподаткування</h1>
             <p class="italic text-sm text-gray-500 mb-8">Наукова доповідь на основі джерел №1–7</p>
@@ -255,7 +280,7 @@
             </div>
         </div>
 
-        <!-- Слайд 2 -->
+        <!-- Слайд 2: Генезис -->
         <div class="wiki-card" id="slide2">
             <aside class="infobox">
                 <table>
@@ -278,7 +303,7 @@
             <div class="memory-hook">💡 ЛЕГКО ЗАПАМ'ЯТАТИ: Немає власності — немає об'єкта податку. Немає держави — немає суб'єкта збору.</div>
         </div>
 
-        <!-- Слайд 3 -->
+        <!-- Слайд 3: Схід -->
         <div class="wiki-card" id="slide3">
             <h2 class="wiki-header">Давній Схід: Іригаційний облік<span class="edit-link">[ред.]</span></h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -296,7 +321,7 @@
             </div>
         </div>
 
-        <!-- Слайд 4 -->
+        <!-- Слайд 4: Античність -->
         <div class="wiki-card" id="slide4">
             <aside class="infobox">
                 <table>
@@ -315,7 +340,7 @@
             </div>
         </div>
 
-        <!-- Слайд 5 -->
+        <!-- Слайд 5: Русь -->
         <div class="wiki-card" id="slide5">
             <h2 class="wiki-header">Київська Русь: Реформи Ольги<span class="edit-link">[ред.]</span></h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -327,7 +352,7 @@
                     <div class="bg-blue-50 p-10 border-l-8 border-blue-600 shadow-lg">
                         <ul class="space-y-6">
                             <li><strong>УРОКИ:</strong> Фіксовані розміри данини. Початок правового регулювання.</li>
-                            <li><strong>ПОГОСТИ:</strong> Спеціальні центри збору, куди привозили податки. Початок адміністративного поділу.</li>
+                            <li><strong>ПОГОСТИ:</strong> Центри збору, куди привозили податки.</li>
                         </ul>
                     </div>
                 </div>
@@ -335,7 +360,7 @@
             <div class="memory-hook">💡 ЛЕГКО ЗАПАМ'ЯТАТИ: Урок — скільки платити, Погост — де платити. Ольга принесла закон.</div>
         </div>
 
-        <!-- Слайд 6 -->
+        <!-- Слайд 6: Теорія -->
         <div class="wiki-card" id="slide6">
             <h2 class="wiki-header">Теорія: Функції та Принципи<span class="edit-link">[ред.]</span></h2>
             <div class="report-section">
@@ -343,13 +368,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
                     <div class="p-8 border-2 border-red-100 rounded-xl bg-red-50 shadow-sm"><h4>1. Фіскальна</h4><p>Забезпечення держави грошима для оборони та управління.</p></div>
                     <div class="p-8 border-2 border-blue-100 rounded-xl bg-blue-50 shadow-sm"><h4>2. Розподільча</h4><p>Вирівнювання соціальних статків: медицина та освіта за рахунок податків.</p></div>
-                    <div class="p-8 border-2 border-green-100 rounded-xl bg-green-50 shadow-sm"><h4>3. Регулююча</h4><p>Стимулку: пільги певним галузям для прискореного зростання економіки.</p></div>
+                    <div class="p-8 border-2 border-green-100 rounded-xl bg-green-50 shadow-sm"><h4>3. Регулююча</h4><p>Стимул: пільги певним галузям для прискореного зростання економіки.</p></div>
                     <div class="p-8 border-2 border-purple-100 rounded-xl bg-purple-50 shadow-sm"><h4>4. Контрольна</h4><p>Моніторинг: податки допомагають державі бачити легальність доходів.</p></div>
                 </div>
             </div>
         </div>
 
-        <!-- Слайд 7 -->
+        <!-- Слайд 7: Порівняння -->
         <div class="wiki-card" id="slide7">
             <h2 class="wiki-header">Порівняльна характеристика епох<span class="edit-link">[ред.]</span></h2>
             <div class="overflow-x-auto shadow-2xl">
@@ -367,7 +392,7 @@
             </div>
         </div>
 
-        <!-- Слайд 8 -->
+        <!-- Слайд 8: Джерела -->
         <div class="wiki-card" id="slide8">
             <h2 class="wiki-header">Список використаних джерел<span class="edit-link">[ред.]</span></h2>
             <div class="report-section px-12 py-6">
@@ -383,6 +408,24 @@
                 <div class="author-sign mt-20">Автор презентації: <span class="text-black font-bold uppercase">Трочин Вікторія</span></div>
             </div>
         </div>
+
+        <!-- Слайд 9: ФІНАЛ (Для підняття настрою) -->
+        <div class="wiki-card" id="slide9">
+            <div class="thanks-container">
+                <div class="thanks-title">ДЯКУЮ ЗА УВАГУ!</div>
+                <div class="thanks-quote">
+                    «Податки — це ціна, яку ми платимо за цивілізоване суспільство... <br>але посмішка після закінчення доповіді — абсолютно безкоштовна!»
+                </div>
+                <div class="image-box shadow-2xl max-w-2xl">
+                    <img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&q=80&w=1000" alt="Позитив та успіх">
+                    <p class="image-caption">Бажаю всім успіхів у вивченні фінансів!</p>
+                </div>
+                <div class="author-sign mt-10">
+                    <span class="text-black font-bold uppercase tracking-widest">Трочин Вікторія</span>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
