@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Трочин Вікторія">
+    <title>Історичні засади оподаткування — Дослідження</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Linux+Libertine&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wiki-blue: #36c;
+            --wiki-bg: #f8f9fa;
+            --accent-gold: #d4af37;
+            --border: #a2a9b1;
+            --dark-ui: #0a0c10;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-ui);
+            color: #e5e5e5;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Навігаційна панель */
+        .nav-bar {
+            background: #161a21;
+            border-bottom: 2px solid var(--accent-gold);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b0b3b8;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover { background: rgba(212, 175, 55, 0.15); color: white; border-color: var(--accent-gold); }
+        .nav-btn.active { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); transform: translateY(-2px); }
+
+        .fullscreen-toggle {
+            background: transparent;
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+        }
+        .fullscreen-toggle:hover { background: var(--accent-gold); color: #000; }
+
+        /* Контентна область */
+        .main-display {
+            flex-grow: 1;
+            padding: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .wiki-card {
+            background: #ffffff;
+            color: #202122;
+            border-radius: 6px;
+            width: 100%;
+            max-width: 1600px;
+            height: 100%;
+            display: none;
+            overflow-y: auto;
+            padding: 60px 80px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        }
+
+        .wiki-card.active { display: block; animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .wiki-header {
+            font-family: 'Linux Libertine', 'Georgia', serif;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0.6em;
+            font-size: 3.2rem;
+            color: #000;
+            padding-bottom: 12px;
+        }
+
+        .infobox {
+            float: right;
+            width: 420px;
+            background: var(--wiki-bg);
+            border: 1px solid var(--border);
+            padding: 15px;
+            margin-left: 40px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+        .infobox th { background: #cedff2; padding: 12px; border: 1px solid var(--border); text-align: center; font-weight: bold; }
+        .infobox td { padding: 12px; border: 1px solid var(--border); }
+
+        .wiki-link { color: var(--wiki-blue); text-decoration: none; font-weight: 500; }
+        .wiki-link:hover { text-decoration: underline; }
+
+        .memory-hook {
+            background: #fffdf5;
+            border-left: 14px solid #f2e0a9;
+            padding: 35px;
+            margin: 50px 0;
+            font-weight: 600;
+            font-style: italic;
+            color: #4b3b00;
+            border-radius: 0 15px 15px 0;
+            font-size: 1.4rem;
+        }
+
+        .wiki-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 40px 0;
+            font-size: 1.1rem;
+        }
+        .wiki-table th { background: #eaecf0; border: 1px solid var(--border); padding: 20px; text-align: left; }
+        .wiki-table td { border: 1px solid var(--border); padding: 20px; vertical-align: top; }
+
+        .image-box {
+            border: 1px solid #ddd;
+            background: #fff;
+            padding: 18px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .image-box img { max-width: 100%; height: auto; display: block; margin: 0 auto; border: 1px solid #f0f0f0; background: #fafafa; }
+        .image-caption { font-size: 0.95rem; color: #444; margin-top: 15px; font-style: italic; }
+
+        .report-section {
+            font-size: 1.35rem;
+            line-height: 2.1;
+            text-align: justify;
+            margin-bottom: 3.5rem;
+        }
+        .report-section h3 {
+            font-weight: 800;
+            font-size: 1.9rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            color: #000;
+            border-bottom: 3px solid #f5f5f5;
+        }
+
+        .author-sign {
+            margin-top: 50px;
+            font-size: 1.1rem;
+            color: #555;
+            font-weight: 600;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .wiki-card::-webkit-scrollbar { width: 10px; }
+        .wiki-card::-webkit-scrollbar-track { background: #fdfdfd; }
+        .wiki-card::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 5px; border: 2px solid #fdfdfd; }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <div class="text-white font-black text-lg tracking-tighter opacity-80 uppercase italic">Research Archive</div>
+        
+        <div class="nav-links">
+            <button class="nav-btn active" onclick="showSlide(1)">Вступ</button>
+            <button class="nav-btn" onclick="showSlide(2)">Генезис</button>
+            <button class="nav-btn" onclick="showSlide(3)">Давній Схід</button>
+            <button class="nav-btn" onclick="showSlide(4)">Античність</button>
+            <button class="nav-btn" onclick="showSlide(5)">Русь</button>
+            <button class="nav-btn" onclick="showSlide(6)">Теорія</button>
+            <button class="nav-btn" onclick="showSlide(7)">Порівняння</button>
+            <button class="nav-btn" onclick="showSlide(8)">Джерела</button>
+        </div>
+        
+        <button class="fullscreen-toggle" onclick="toggleFullscreen()">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0.5a.5.5 0 0 0-1 0v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 0 0 1h4a1.5 1.5 0 0 0 1.5-1.5v-4z"/></svg>
+            Повний екран
+        </button>
+    </nav>
+
+    <main class="main-display" id="main-content">
+        
+        <div class="wiki-card active" id="slide1">
+            <h1 class="wiki-header">Історичні засади оподаткування</h1>
+            <p class="italic text-sm text-gray-500 mb-8">Наукова доповідь на основі джерел №1–7</p>
+            <div class="max-w-6xl mx-auto py-4">
+                <div class="flex flex-col lg:flex-row gap-16 items-center">
+                    <div class="flex-1">
+                        <h2 class="text-4xl font-bold mb-8 text-black uppercase tracking-tight">Вступне слово</h2>
+                        <p class="report-section">
+                            Оподаткування є фундаментальною ознакою держави та головним ресурсом для реалізації її функцій. Від перших іригаційних систем до сучасних бюджетів цифрової епохи, податки трансформувалися разом із суспільним договором. 
+                        </p>
+                        <div class="p-8 bg-gray-50 border-l-8 border-gray-400 italic text-2xl leading-relaxed">
+                            «Податки — це артерії держави. Без них неможливе існування інфраструктури, армії та соціального захисту».
+                        </div>
+                        
+                        <div class="author-sign">
+                            <span>Автор презентації:</span>
+                            <span class="text-black font-bold">Трочин Вікторія</span>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-2/5">
+                        <div class="image-box shadow-2xl">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Rosetta_Stone.JPG/1200px-Rosetta_Stone.JPG" alt="Розеттський камінь">
+                            <p class="image-caption">Розеттський камінь (196 р. до н.е.) — один з перших документів з фіскальними нормами.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wiki-card" id="slide2">
+            <aside class="infobox">
+                <table>
+                    <tr><th colspan="2">Теорія Генезису</th></tr>
+                    <tr><td class="font-bold">Дослідник:</td><td>Макурін А. А. (с. 5-11)</td></tr>
+                    <tr><td class="font-bold">База:</td><td>Додатковий продукт</td></tr>
+                    <tr><td class="font-bold">Суть:</td><td>Дар → Обов'язок</td></tr>
+                </table>
+            </aside>
+            <h2 class="wiki-header">Генезис оподаткування<span class="edit-link">[ред.]</span></h2>
+            <div class="report-section">
+                <p>Згідно з працею <strong>А. А. Макуріна (2018)</strong>, податки виникли як об'єктивний результат формування держави. Ключовою передумовою стала поява <a class="wiki-link">приватної власності</a> та виокремлення апарату публічної влади.</p>
+                <h3>Передумови формування</h3>
+                <ul class="list-disc list-inside ml-4 space-y-5">
+                    <li><strong>Економічна:</strong> Створення надлишкового продукту після неолітичної революції.</li>
+                    <li><strong>Соціальна:</strong> Поділ праці (управителі та воїни).</li>
+                    <li><strong>Сакральна:</strong> Перетворення добровільних пожертв у обов’язковий внесок правителю-божеству.</li>
+                </ul>
+            </div>
+            <div class="memory-hook">💡 ЛЕГКО ЗАПАМ'ЯТАТИ: Немає власності — немає об'єкта податку. Немає держави — немає суб'єкта збору.</div>
+        </div>
+
+        <div class="wiki-card" id="slide3">
+            <h2 class="wiki-header">Давній Схід: Епоха іригаційного обліку<span class="edit-link">[ред.]</span></h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="report-section">
+                    <p><strong>Фрадинський О. А. (2011)</strong> визначає модель Стародавнього Єгипту як першу систему прогнозного планування.</p>
+                    <h3>Механізм «Ніломірів»</h3>
+                    <p>Писарі фараона вимірювали рівень води в Нілі. Висока вода = багатий врожай = високі норми збору зерна. Це був прообраз планування доходів бюджету.</p>
+                </div>
+                <div class="w-full">
+                    <div class="image-box shadow-xl">
+                        <img src="https://focus.ua/static/storage/thumbs/920x465/2/89/4pa4s5-47233774d0bb694b7146b464863f4892.jpg?v=4441_1" alt="Єгипетські писарі">
+                        <p class="image-caption">Давньоєгипетські писарі під час фіксації врожаю (Джерело №5)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wiki-card" id="slide4">
+            <aside class="infobox">
+                <table>
+                    <tr><th colspan="2">Римський Ценз</th></tr>
+                    <tr><td colspan="2" class="text-center"><img src="https://st.violity.com/auction/big/auctions/11/33/43/2/113343263.jpg" alt="Римські монети"></td></tr>
+                    <tr><td class="font-bold">Метод:</td><td>Декларування майна</td></tr>
+                    <tr><td class="font-bold">Поняття:</td><td>Census (Перепис)</td></tr>
+                </table>
+            </aside>
+            <h2 class="wiki-header">Античність: Римський Ценз та Грецька Честь<span class="edit-link">[ред.]</span></h2>
+            <div class="report-section">
+                <h3>Давня Греція: Літургії</h3>
+                <p>У Афінах прямі податки вважалися рабськими. Багатії брали <strong>літургії</strong> — витрати на флот або свята — заради статусу.</p>
+                <h3>Давній Рим: Професійна служба</h3>
+                <p>Рим створив <strong>Ценз (Census)</strong>. Кожні 5 років громадяни декларували власність. Введено мита <em>Portorium</em> та податок на спадщину.</p>
+            </div>
+        </div>
+
+        <div class="wiki-card" id="slide5">
+            <h2 class="wiki-header">Київська Русь: Реформи Ольги<span class="edit-link">[ред.]</span></h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="w-full"><img src="https://www.pravmir.ru/wp-content/uploads/2014/02/2103560.jpg" class="shadow-2xl rounded" alt="Княгиня Ольга"></div>
+                <div class="report-section">
+                    <p>За <strong>Томнюк Т. Л. (2022)</strong>, Ольга реформувала «Полюддя» у 946 році:</p>
+                    <div class="bg-blue-50 p-10 border-l-8 border-blue-600 shadow-lg">
+                        <ul class="space-y-6">
+                            <li><strong>УРОКИ:</strong> Фіксовані розміри данини.</li>
+                            <li><strong>ПОГОСТИ:</strong> Центри збору, куди привозили податки.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wiki-card" id="slide6">
+            <h2 class="wiki-header">Теорія: Функції та Принципи<span class="edit-link">[ред.]</span></h2>
+            <div class="report-section">
+                <p>За <strong>Волоховою І. С. (2019)</strong>:</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
+                    <div class="p-8 border-2 border-red-100 rounded bg-red-50 shadow-sm"><h4>1. Фіскальна</h4><p>Забезпечення держави грошима.</p></div>
+                    <div class="p-8 border-2 border-blue-100 rounded bg-blue-50 shadow-sm"><h4>2. Розподільча</h4><p>Соціальна підтримка та медицина.</p></div>
+                    <div class="p-8 border-2 border-green-100 rounded bg-green-50 shadow-sm"><h4>3. Регулююча</h4><p>Стимулювання пріоритетних галузей.</p></div>
+                    <div class="p-8 border-2 border-purple-100 rounded bg-purple-50 shadow-sm"><h4>4. Контрольна</h4><p>Нагляд за легальністю доходів.</p></div>
+                </div>
+                <h3>Канони Адама Сміта:</h3>
+                <ul class="list-disc list-inside ml-4 space-y-2 opacity-80 text-lg">
+                    <li>Справедливість, Визначеність, Зручність, Економність.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="wiki-card" id="slide7">
+            <h2 class="wiki-header">Порівняльна характеристика епох<span class="edit-link">[ред.]</span></h2>
+            <div class="overflow-x-auto shadow-2xl">
+                <table class="wiki-table">
+                    <thead>
+                        <tr><th>Період</th><th>Джерела</th><th>Витрати</th><th>Види податків</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><b>Давнина</b></td><td>Врожаї, худоба</td><td>Храми, канали</td><td>Натуральні, мита</td></tr>
+                        <tr><td><b>Середньовіччя</b></td><td>Праця, продукти</td><td>Двір, замки, війни</td><td>Рента, десятина</td></tr>
+                        <tr><td><b>Капіталізм</b></td><td>Прибутки, мита</td><td>Армія, залізниці</td><td>Акцизи, прибуткові</td></tr>
+                        <tr><td><b>Сучасність</b></td><td>ПДФО, ПДВ</td><td>Освіта, IT, соцпроекти</td><td>Цифрові, екологічні</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="wiki-card" id="slide8">
+            <h2 class="wiki-header">Список використаних джерел<span class="edit-link">[ред.]</span></h2>
+            <div class="report-section px-12 py-6">
+                <ol class="list-decimal space-y-6 text-xl text-gray-800 italic">
+                    <li>Податковий кодекс України № 2755-VI.</li>
+                    <li>Макурін А. А. Теорія оподаткування, 2018.</li>
+                    <li>Податкова система / за ред. Волохової, 2019.</li>
+                    <li>Томнюк Т. Л. Податкова система, 2022.</li>
+                    <li>Фрадинський О. А. Становлення оподаткування, 2011.</li>
+                    <li>Шевчук Ж. А. Історія податків, 2008.</li>
+                    <li>Лекційний матеріал.</li>
+                </ol>
+                <div class="author-sign mt-20">Автор презентації: <span class="text-black font-bold uppercase">Трочин Вікторія</span></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showSlide(n) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            const btns = document.querySelectorAll('.nav-btn');
+            if (btns[n-1]) btns[n-1].classList.add('active');
+            
+            document.querySelectorAll('.wiki-card').forEach(c => c.classList.remove('active'));
+            const activeSlide = document.getElementById('slide'+n);
+            if (activeSlide) {
+                activeSlide.classList.add('active');
+                activeSlide.scrollTop = 0;
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                const doc = document.documentElement;
+                if (doc.requestFullscreen) doc.requestFullscreen();
+                else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
