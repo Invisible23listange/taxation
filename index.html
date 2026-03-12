@@ -155,7 +155,7 @@
         .wiki-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 40px 0;
+            margin: 45px 0;
             font-size: 1.2rem;
         }
         .wiki-table th { background: #eaecf0; border: 1px solid var(--border); padding: 22px; text-align: left; }
@@ -210,7 +210,7 @@
             align-items: center; gap: 10px;
         }
 
-        /* Райдужний неон для фіналу (М'який) */
+        /* Плавне райдужне сяйво для фіналу */
         .thanks-container {
             height: 100%;
             display: flex;
@@ -223,7 +223,7 @@
         }
         .thanks-title {
             font-family: 'Linux Libertine', serif;
-            font-size: 4.8rem; /* Зменшено, щоб вмістилося повністю */
+            font-size: 4.8rem;
             font-weight: 900;
             margin-bottom: 1rem;
             text-transform: uppercase;
@@ -239,7 +239,7 @@
         }
 
         .thanks-quote {
-            font-size: 1.8rem; /* Зменшено текст цитати */
+            font-size: 1.8rem;
             font-style: italic;
             color: #111;
             max-width: 900px;
@@ -248,7 +248,7 @@
         }
 
         .final-image-wrapper img {
-            max-height: 32vh; /* Зменшено висоту картинки */
+            max-height: 32vh;
             width: auto;
             border-radius: 12px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
@@ -289,7 +289,7 @@
             <button class="nav-btn" onclick="showSlide(6)">Теорія</button>
             <button class="nav-btn" onclick="showSlide(7)">Порівняння</button>
             <button class="nav-btn" onclick="showSlide(8)">Джерела</button>
-            <button class="nav-btn btn-final-nav" onclick="showSlide(9)">09 Фінал</button>
+            <button class="nav-btn btn-final-nav" onclick="showSlide(9)">Фінал</button>
         </div>
         
         <button class="fullscreen-toggle" onclick="toggleFullscreen()">
@@ -300,6 +300,7 @@
 
     <main class="main-display" id="main-content">
         
+        <!-- Slide 1 -->
         <div class="wiki-card active" id="slide1">
             <div class="discipline-badge">Теорія податків та мита</div>
             <h1 class="wiki-header">Історичні засади оподаткування</h1>
@@ -322,6 +323,7 @@
             </div>
         </div>
 
+        <!-- Slide 2 -->
         <div class="wiki-card" id="slide2">
             <aside class="infobox"><table><tr><th colspan="2">Теорія Генезису</th></tr><tr><td class="font-bold">Дослідник:</td><td>Макурін А. А. (с. 5-11)</td></tr><tr><td class="font-bold">База:</td><td>Додатковий продукт</td></tr><tr><td class="font-bold">Суть:</td><td>Дар → Обов'язок</td></tr></table></aside>
             <h2 class="wiki-header">Генезис оподаткування<span class="edit-link">[ред.]</span></h2>
@@ -337,6 +339,7 @@
             <div class="memory-hook">💡 ЛЕГКО ЗАПАМ'ЯТАТИ: Немає власності — немає об'єкта податку. Немає держави — немає суб'єкта збору.</div>
         </div>
 
+        <!-- Slide 3 -->
         <div class="wiki-card" id="slide3">
             <h2 class="wiki-header">Давній Схід: Іригаційний облік<span class="edit-link">[ред.]</span></h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -354,6 +357,7 @@
             </div>
         </div>
 
+        <!-- Slide 4 -->
         <div class="wiki-card" id="slide4">
             <h2 class="wiki-header">Античність: Рим та Греція<span class="edit-link">[ред.]</span></h2>
             <div class="report-section">
@@ -368,6 +372,7 @@
             </div>
         </div>
 
+        <!-- Slide 5 -->
         <div class="wiki-card" id="slide5">
             <h2 class="wiki-header">Київська Русь: Реформи Ольги<span class="edit-link">[ред.]</span></h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -386,6 +391,7 @@
             </div>
         </div>
 
+        <!-- Slide 6 -->
         <div class="wiki-card" id="slide6">
             <h2 class="wiki-header">Теорія: Функції та Принципи</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10 my-16">
@@ -396,6 +402,7 @@
             </div>
         </div>
 
+        <!-- Slide 7 -->
         <div class="wiki-card" id="slide7">
             <h2 class="wiki-header">Порівняльна характеристика епох</h2>
             <div class="overflow-x-auto shadow-2xl">
@@ -411,6 +418,7 @@
             </div>
         </div>
 
+        <!-- Slide 8 -->
         <div class="wiki-card" id="slide8">
             <h2 class="wiki-header">Список використаних джерел</h2>
             <div class="report-section px-16 py-10">
@@ -427,7 +435,7 @@
             </div>
         </div>
 
-        <!-- Слайд 9: ФІНАЛ (ПОВНІСТЮ ВИДНО) -->
+        <!-- Слайд 9: ФІНАЛ -->
         <div class="wiki-card" id="slide9">
             <div class="thanks-container">
                 <div class="thanks-title">ДЯКУЮ ЗА УВАГУ!</div>
