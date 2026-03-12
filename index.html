@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Трочин Вікторія">
-    <title>Історичні засади оподаткування — Теорія податків та мита</title>
+    <title>Історичні засади оподаткування — Преміум Дослідження</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-bg: #0f172a; /* Темно-синій фон */
-            --accent-blue: #00d2ff; /* Арктичний блакитний акцент */
-            --border-color: #334155;
-            --card-white: rgba(255, 255, 255, 0.99);
+            --primary-bg: #0f172a; 
+            --accent-azure: #00d2ff; 
+            --glass-card: rgba(255, 255, 255, 0.99);
+            --azure-glow: rgba(0, 210, 255, 0.4);
         }
 
-        * { box-sizing: border-box; }
+        /* Повертаємо нормальний курсор */
+        * { box-sizing: border-box; } 
 
         body {
             font-family: 'Inter', sans-serif;
@@ -29,22 +30,23 @@
             flex-direction: column;
             overflow: hidden;
             position: relative;
+            cursor: default;
         }
 
-        /* Анімація фону */
+        /* Живий фон з частинками */
         #bg-canvas {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0;
-            opacity: 0.2;
+            opacity: 0.25;
             pointer-events: none;
         }
 
-        /* Лінія прогресу */
+        /* Прогрес-бар */
         .progress-container {
             width: 100%;
-            height: 5px;
-            background: rgba(255,255,255,0.1);
+            height: 6px;
+            background: rgba(255,255,255,0.05);
             position: fixed;
             top: 0; left: 0;
             z-index: 1000;
@@ -52,171 +54,191 @@
         #progress-bar {
             height: 100%;
             width: 11%;
-            background: var(--accent-blue);
-            transition: width 0.5s ease;
-            box-shadow: 0 0 15px var(--accent-blue);
+            background: linear-gradient(90deg, #00d2ff, #0081a7);
+            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 20px var(--accent-azure);
         }
 
         /* Навігаційна панель */
         .nav-bar {
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 2px solid var(--accent-blue);
+            background: rgba(15, 23, 42, 0.98);
+            border-bottom: 2px solid var(--accent-azure);
             padding: 12px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
+            backdrop-filter: blur(20px);
         }
 
-        .nav-links { display: flex; gap: 10px; justify-content: center; flex-grow: 1; flex-wrap: wrap; }
+        .nav-links { display: flex; gap: 10px; justify-content: center; flex-grow: 1; }
 
         .nav-btn {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(0, 210, 255, 0.2);
             color: #94a3b8;
-            padding: 8px 18px;
-            border-radius: 6px;
+            padding: 10px 22px;
+            border-radius: 8px;
             font-size: 0.85rem;
             font-weight: 700;
             text-transform: uppercase;
+            transition: 0.4s;
             cursor: pointer;
-            transition: 0.3s;
         }
 
-        .nav-btn:hover { background: rgba(0, 210, 255, 0.1); color: white; border-color: var(--accent-blue); }
-        .nav-btn.active { background: var(--accent-blue); color: #000; border-color: var(--accent-blue); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4); }
+        .nav-btn:hover { background: rgba(0, 210, 255, 0.15); color: white; border-color: var(--accent-azure); }
+        .nav-btn.active { background: var(--accent-azure); color: #000; transform: translateY(-3px); box-shadow: 0 10px 20px var(--azure-glow); }
 
-        /* Контентна область (1920x1080) */
+        /* Контентна область */
         .main-display {
             flex-grow: 1;
             padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
             z-index: 1;
             overflow: hidden;
         }
 
         .wiki-card {
-            background: var(--card-white);
-            color: #1e293b;
-            border-radius: 12px;
+            background: var(--glass-card);
+            color: #0f172a;
+            border-radius: 20px;
             width: 100%;
             max-width: 1880px; 
-            height: 98%;
+            height: 96%;
             display: none;
             overflow-y: auto;
             padding: 60px 100px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-            animation: cardFadeIn 0.6s ease-out;
+            box-shadow: 0 50px 150px rgba(0,0,0,0.6);
+            animation: cardSlide 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
 
         .wiki-card.active { display: block; }
 
-        @keyframes cardFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes cardSlide { from { opacity: 0; transform: translateY(40px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
         .wiki-header {
             font-family: 'Playfair Display', serif;
-            border-bottom: 4px solid #e2e8f0;
-            margin-bottom: 0.8em;
-            font-size: 4rem;
+            border-bottom: 5px solid #f1f5f9;
+            margin-bottom: 0.7em;
+            font-size: 4.5rem;
             color: #0f172a;
-            padding-bottom: 12px;
+            padding-bottom: 15px;
             font-weight: 900;
         }
 
         .infobox {
             float: right;
-            width: 480px;
+            width: 520px;
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            padding: 25px;
+            padding: 30px;
             margin-left: 50px;
             margin-bottom: 30px;
-            font-size: 1.1rem;
-            border-radius: 10px;
+            font-size: 1.2rem;
+            border-radius: 15px;
         }
-        .infobox th { background: #e0f2fe; padding: 14px; border: 1px solid #cbd5e1; text-align: center; font-weight: 800; color: #0369a1; }
-        .infobox td { padding: 14px; border: 1px solid #cbd5e1; }
+        .infobox th { background: #e0f2fe; padding: 18px; border: 1px solid #cbd5e1; text-align: center; font-weight: 800; color: #0369a1; }
+        .infobox td { padding: 18px; border: 1px solid #cbd5e1; }
 
         .memory-hook {
             background: #f0f9ff;
-            border-left: 18px solid var(--accent-blue);
-            padding: 40px;
+            border-left: 20px solid var(--accent-azure);
+            padding: 45px;
             margin: 60px 0;
-            font-weight: 600;
+            font-weight: 700;
             font-style: italic;
             color: #0c4a6e;
-            border-radius: 0 15px 15px 0;
-            font-size: 1.8rem;
+            border-radius: 0 20px 20px 0;
+            font-size: 2rem;
         }
 
         .wiki-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 40px 0;
-            font-size: 1.35rem;
+            margin: 50px 0;
+            font-size: 1.5rem;
             background: white;
             border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            overflow: hidden;
         }
-        .wiki-table th { background: #0f172a; color: white; padding: 25px; text-align: left; font-weight: 800; }
-        .wiki-table td { border: 1px solid #e2e8f0; padding: 25px; vertical-align: top; color: #334155; }
-        .wiki-table tr:nth-child(even) { background: #f1f5f9; }
+        .wiki-table th { background: #0f172a; color: white; padding: 30px; text-align: left; }
+        .wiki-table td { border: 1px solid #f1f5f9; padding: 30px; vertical-align: top; }
+        .wiki-table tr:hover td { background: #f0f9ff; }
 
+        /* 3D TILT EFFECT FOR PHOTOS */
         .image-box {
             border: 1px solid #e2e8f0;
             background: #fff;
             padding: 25px;
-            margin-bottom: 40px;
+            margin-bottom: 45px;
             text-align: center;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+            perspective: 1500px;
+            transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer;
         }
-        .image-box img { max-width: 100%; height: auto; border-radius: 6px; }
-        .image-caption { font-size: 1.1rem; color: #64748b; margin-top: 18px; font-style: italic; font-weight: 600; }
+        .image-box:hover {
+            transform: rotateY(10deg) rotateX(2deg) translateY(-15px);
+            box-shadow: 0 40px 100px var(--azure-glow);
+        }
+        .image-box img { max-width: 100%; height: auto; border-radius: 10px; }
+        .image-caption { font-size: 1.2rem; color: #64748b; margin-top: 20px; font-style: italic; font-weight: 600; }
 
         .report-section {
-            font-size: 1.7rem;
-            line-height: 2.3;
+            font-size: 1.9rem;
+            line-height: 2.4;
             text-align: justify;
             margin-bottom: 4rem;
         }
         .report-section h3 {
             font-weight: 900;
-            font-size: 2.6rem;
-            margin-top: 4rem;
+            font-size: 3rem;
+            margin-top: 5rem;
             margin-bottom: 2rem;
             color: #0f172a;
-            border-left: 12px solid var(--accent-blue);
-            padding-left: 20px;
+            border-left: 15px solid var(--accent-azure);
+            padding-left: 25px;
         }
 
-        .discipline-badge {
-            background: var(--accent-blue);
-            color: #000;
-            padding: 8px 30px;
-            border-radius: 50px;
+        /* ІНТЕРАКТИВНІ КНОПКИ */
+        .fact-btn {
+            background: #0f172a;
+            color: var(--accent-azure);
+            padding: 18px 45px;
+            border-radius: 12px;
             font-weight: 800;
+            border: 2px solid var(--accent-azure);
+            transition: 0.3s;
+            margin-top: 30px;
             text-transform: uppercase;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-            display: inline-block;
-            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            animation: glowPulse 2s infinite;
+            cursor: pointer;
+        }
+        @keyframes glowPulse { 0% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(0, 210, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0); } }
+        .fact-btn:hover { background: var(--accent-azure); color: #000; transform: scale(1.05); }
+
+        .pop-box {
+            background: #e0f2fe;
+            padding: 30px;
+            border-radius: 20px;
+            border: 4px dashed var(--accent-azure);
+            display: none;
+            margin-top: 30px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-style: italic;
+            color: #0369a1;
+            font-size: 1.8rem;
         }
 
-        .author-sign {
-            margin-top: 60px;
-            font-size: 1.4rem;
-            color: #64748b;
-            font-weight: 700;
-            border-top: 2px solid #f1f5f9;
-            padding-top: 30px;
-            display: flex;
-            align-items: center; gap: 15px;
-        }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* Фінальний слайд */
+        /* ФІНАЛ */
         .thanks-container {
             height: 100%;
             display: flex;
@@ -227,54 +249,77 @@
         }
         .thanks-title {
             font-family: 'Playfair Display', serif;
-            font-size: 5.5rem;
+            font-size: 7.5rem;
             font-weight: 900;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
             text-transform: uppercase;
             color: #0f172a;
-            animation: cyanGlow 4s infinite alternate;
+            animation: neonAzure 4s infinite alternate;
         }
 
-        @keyframes cyanGlow {
+        @keyframes neonAzure {
             0% { text-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
-            100% { text-shadow: 0 0 30px rgba(0, 210, 255, 0.6); color: #00a8cc; }
+            100% { text-shadow: 0 0 60px var(--accent-azure); color: #0284c7; }
         }
 
         .thanks-quote {
-            font-size: 2rem;
+            font-size: 2.6rem;
             font-style: italic;
             color: #334155;
-            max-width: 1100px;
-            margin-bottom: 3rem;
-            line-height: 1.5;
+            max-width: 1300px;
+            margin-bottom: 4rem;
+            line-height: 1.6;
         }
 
-        .final-image-wrapper img {
-            max-height: 35vh;
+        .final-img-box img {
+            max-height: 38vh;
             width: auto;
-            border-radius: 20px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.2);
-            border: 6px solid white;
+            border-radius: 30px;
+            box-shadow: 0 40px 120px rgba(0,0,0,0.2);
+            border: 8px solid white;
+        }
+
+        .discipline-badge {
+            background: var(--accent-azure);
+            color: #000;
+            padding: 10px 40px;
+            border-radius: 50px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 1.3rem;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .author-sign {
+            margin-top: 60px;
+            font-size: 1.5rem;
+            color: #64748b;
+            font-weight: 700;
+            border-top: 2px solid #f1f5f9;
+            padding-top: 35px;
+            display: flex;
+            align-items: center; gap: 15px;
         }
 
         /* Емодзі */
         .emoji-flyer {
             position: fixed;
-            font-size: 4rem;
+            font-size: 5rem;
             pointer-events: none;
             z-index: 999;
-            animation: flyAway 5s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+            animation: flyOut 5s forwards;
             opacity: 0;
         }
 
-        @keyframes flyAway {
-            0% { transform: scale(0.1) rotate(0deg); opacity: 1; top: 50%; left: 50%; }
-            100% { transform: scale(1.8) translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
+        @keyframes flyOut {
+            0% { transform: scale(0.1); opacity: 1; top: 50%; left: 50%; }
+            100% { transform: scale(2) translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
         }
 
         .wiki-card::-webkit-scrollbar { width: 12px; }
         .wiki-card::-webkit-scrollbar-track { background: #f1f5f9; }
-        .wiki-card::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 10px; border: 3px solid #f1f5f9; }
+        .wiki-card::-webkit-scrollbar-thumb { background: var(--accent-azure); border-radius: 10px; border: 3px solid #f1f5f9; }
     </style>
 </head>
 <body>
@@ -283,7 +328,7 @@
     <div class="progress-container"><div id="progress-bar"></div></div>
 
     <nav class="nav-bar">
-        <div class="text-white font-black text-2xl tracking-tighter opacity-90 italic uppercase">Research Archive</div>
+        <div class="text-white font-black text-3xl tracking-tighter opacity-95 italic uppercase">Premium_Archive</div>
         
         <div class="nav-links">
             <button class="nav-btn active" onclick="showSlide(1)">Вступ</button>
@@ -297,29 +342,29 @@
             <button class="nav-btn" onclick="showSlide(9)">Фінал</button>
         </div>
         
-        <button onclick="toggleFullscreen()" style="background: none; border: 1px solid rgba(255,255,255,0.2); color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0.5a.5.5 0 0 0-1 0v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 0 0 1h4a1.5 1.5 0 0 0 1.5-1.5v-4z"/></svg>
+        <button onclick="toggleFullscreen()" style="background: none; border: 2px solid var(--accent-azure); color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; cursor: pointer;">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0.5a.5.5 0 0 0-1 0v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 0 0 1h4a1.5 1.5 0 0 0 1.5-1.5v-4z"/></svg>
         </button>
     </nav>
 
     <main class="main-display" id="main-content">
         
-        <!-- Слайд 1: Вступ -->
+        <!-- Slide 1 -->
         <div class="wiki-card active" id="slide1">
             <div class="discipline-badge">Теорія податків та мита</div>
             <h1 class="wiki-header">Історичні засади оподаткування</h1>
-            <p class="italic text-xl text-gray-500 mb-12">Наукова доповідь за матеріалами джерел №1–7</p>
+            <p class="italic text-2xl text-gray-500 mb-12">Наукова доповідь за матеріалами джерел №1–7</p>
             <div class="flex flex-col lg:flex-row gap-20 items-center">
                 <div class="flex-1">
-                    <h2 class="text-7xl font-bold mb-10 text-black uppercase tracking-tight">Вступне слово</h2>
+                    <h2 class="text-8xl font-bold mb-10 text-black uppercase tracking-tight">Вступ</h2>
                     <p class="report-section">Оподаткування є фундаментальною ознакою держави та головним ресурсом для реалізації її функцій. Від перших іригаційних систем до сучасних бюджетів цифрової епохи, податки трансформувалися разом із суспільним договором.</p>
-                    <div class="p-12 bg-slate-50 border-l-[15px] border-blue-400 italic text-4xl leading-relaxed shadow-sm">
-                        «Податки — це артерії держави. Без них неможливе існування інфраструктури, армії та соціального захисту».
+                    <div class="p-12 bg-slate-50 border-l-[20px] border-blue-400 italic text-5xl leading-tight shadow-sm">
+                        «Податки — це артерії держави. Без них неможливе існування інфраструктури та безпеки».
                     </div>
-                    <div class="author-sign"><span>Автор презентації:</span><span class="text-slate-900 font-black text-2xl uppercase">Трочин Вікторія</span></div>
+                    <div class="author-sign"><span>Автор дослідження:</span><span class="text-slate-900 font-black text-3xl uppercase">Трочин Вікторія</span></div>
                 </div>
                 <div class="w-full lg:w-2/5">
-                    <div class="image-box shadow-2xl">
+                    <div class="image-box">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Rosetta_Stone.JPG/1200px-Rosetta_Stone.JPG" alt="Розеттський камінь">
                         <p class="image-caption">Розеттський камінь (196 р. до н.е.) — артефакт фіскального права.</p>
                     </div>
@@ -327,7 +372,7 @@
             </div>
         </div>
 
-        <!-- Слайд 2: Генезис -->
+        <!-- Slide 2 -->
         <div class="wiki-card" id="slide2">
             <aside class="infobox"><table><tr><th colspan="2">Теорія Генезису</th></tr><tr><td class="font-bold">Дослідник:</td><td>Макурін А. А. (с. 5-11)</td></tr><tr><td class="font-bold">База:</td><td>Додатковий продукт</td></tr><tr><td class="font-bold">Суть:</td><td>Дар → Обов'язок</td></tr></table></aside>
             <h2 class="wiki-header">Генезис оподаткування<span class="edit-link">[ред.]</span></h2>
@@ -339,21 +384,25 @@
                     <li><strong>Соціальний:</strong> Поділ праці та поява професійного управлінського апарату.</li>
                     <li><strong>Сакральний:</strong> Перетворення добровільних жертвоприношень у обов’язковий внесок.</li>
                 </ul>
+                <button onclick="toggleBox('fact-bubble-2')" class="fact-btn">Цікавий факт 💡</button>
+                <div id="fact-bubble-2" class="pop-box">
+                    «У найдавніші часи податки часто мали сакральний характер: люди вірили, що віддаючи частину врожаю правителю-богу, вони забезпечують прихильність природи на наступний рік».
+                </div>
             </div>
             <div class="memory-hook">💡 ЛЕГКО ЗАПАМ'ЯТАТИ: Немає власності — немає об'єкта податку. Немає держави — немає суб'єкта збору.</div>
         </div>
 
-        <!-- Слайд 3: Давній Схід -->
+        <!-- Slide 3 -->
         <div class="wiki-card" id="slide3">
-            <h2 class="wiki-header">Давній Схід: Іригаційний облік<span class="edit-link">[ред.]</span></h2>
+            <h2 class="wiki-header">Давній Схід: Іригаційний облік</h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                 <div class="report-section">
                     <p><strong>Фрадинський О. А. (2011)</strong> визначає модель Стародавнього Єгипту як першу систему фіскального планування.</p>
                     <h3>Механізм «Ніломірів»</h3>
-                    <p>Писарі фараона вимірювали рівень води в Нілі. Висока вода = багатий врожай = високі норми збору зерна. Це був прообраз планування доходів бюджету.</p>
+                    <p>Писарі фараона вимірювали рівень води в Нілі. Висока вода = багатий врожай = високі норми збору зерна. Це став прообраз планування доходів бюджету.</p>
                 </div>
                 <div class="w-full">
-                    <div class="image-box shadow-xl">
+                    <div class="image-box">
                         <img src="https://focus.ua/static/storage/thumbs/920x465/2/89/4pa4s5-47233774d0bb694b7146b464863f4892.jpg?v=4441_1" alt="Писарі">
                         <p class="image-caption">Давньоєгипетські писарі під час фіксації врожаю (Джерело №5)</p>
                     </div>
@@ -361,9 +410,9 @@
             </div>
         </div>
 
-        <!-- Слайд 4: Античність -->
+        <!-- Slide 4 -->
         <div class="wiki-card" id="slide4">
-            <h2 class="wiki-header">Античність: Рим та Греція<span class="edit-link">[ред.]</span></h2>
+            <h2 class="wiki-header">Античність: Рим та Греція</h2>
             <div class="report-section">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
                     <div>
@@ -372,7 +421,7 @@
                         <h3 class="mt-12">Давній Рим: Професійна служба</h3>
                         <p>Рим створив систему <strong>Цензу (Census)</strong>. Кожні 5 років громадяни декларували власність під присягою. Введено мита та податок на спадщину.</p>
                     </div>
-                    <div class="image-box shadow-xl">
+                    <div class="image-box">
                         <img src="https://st.violity.com/auction/big/auctions/11/33/43/2/113343263.jpg" alt="Римські монети">
                         <p class="image-caption">Римські монети — інструмент грошового оподаткування імперії.</p>
                     </div>
@@ -380,9 +429,9 @@
             </div>
         </div>
 
-        <!-- Слайд 5: Русь -->
+        <!-- Slide 5 -->
         <div class="wiki-card" id="slide5">
-            <h2 class="wiki-header">Київська Русь: Реформи Ольги<span class="edit-link">[ред.]</span></h2>
+            <h2 class="wiki-header">Київська Русь: Реформи Ольги</h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                 <div class="w-full">
                     <div class="image-box">
@@ -392,75 +441,52 @@
                 </div>
                 <div class="report-section">
                     <p>За <strong>Томнюк Т. Л. (2022)</strong>, Ольга реформувала «Полюддя» у 946 році, заклавши основи фінансового порядку:</p>
-                    <div class="bg-blue-50 p-10 border-l-[15px] border-blue-600 shadow-lg rounded-r-xl">
+                    <div class="bg-blue-50 p-12 border-l-[15px] border-blue-600 shadow-lg rounded-r-xl">
                         <ul class="space-y-10">
-                            <li><strong class="text-3xl text-blue-900 uppercase">Уроки:</strong> Фіксовані розміри данини.</li>
-                            <li><strong class="text-3xl text-blue-900 uppercase">Погости:</strong> Спеціальні центри збору податків.</li>
+                            <li><strong class="text-4xl text-blue-900 uppercase">Уроки:</strong> Фіксовані розміри данини.</li>
+                            <li><strong class="text-4xl text-blue-900 uppercase">Погости:</strong> Спеціальні центри збору податків.</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Слайд 6: Теорія -->
+        <!-- Slide 6 -->
         <div class="wiki-card" id="slide6">
-            <h2 class="wiki-header">Теорія: Функції та Принципи<span class="edit-link">[ред.]</span></h2>
+            <h2 class="wiki-header">Теорія: Функції та Принципи</h2>
             <div class="report-section">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
-                    <div class="p-12 border-2 border-red-100 rounded-3xl bg-red-50 shadow-sm"><h4>1. Фіскальна</h4><p class="text-2xl">Забезпечення держави грошима для оборони та управління.</p></div>
-                    <div class="p-12 border-2 border-blue-100 rounded-3xl bg-blue-50 shadow-sm"><h4>2. Розподільча</h4><p class="text-2xl">Вирівнювання соціальних статків за рахунок податків.</p></div>
-                    <div class="p-12 border-2 border-green-100 rounded-3xl bg-green-50 shadow-sm"><h4>3. Регулююча</h4><p class="text-2xl">Стимул: пільги певним галузям для економічного зростання.</p></div>
-                    <div class="p-12 border-2 border-purple-100 rounded-3xl bg-purple-50 shadow-sm"><h4>4. Контрольна</h4><p class="text-2xl">Нагляд за легальністю доходів громадян.</p></div>
+                    <div class="p-12 border-2 border-red-100 rounded-3xl bg-red-50 shadow-sm"><h4>1. Фіскальна</h4><p class="text-3xl">Забезпечення держави грошима для оборони та управління.</p></div>
+                    <div class="p-12 border-2 border-blue-100 rounded-3xl bg-blue-50 shadow-sm"><h4>2. Розподільча</h4><p class="text-3xl">Вирівнювання соціальних статків за рахунок податків.</p></div>
+                </div>
+                <button onclick="toggleBox('fact-bubble-6')" class="fact-btn">Цікавий факт 💡</button>
+                <div id="fact-bubble-6" class="pop-box">
+                    «Адам Сміт сформував чотири канони оподаткування: справедливість, визначеність, зручність та економність. Ці принципи вважаються золотим стандартом фінансової науки й сьогодні.»
                 </div>
             </div>
         </div>
 
-        <!-- Слайд 7: Порівняння (Таблиця відновлена) -->
+        <!-- Slide 7 -->
         <div class="wiki-card" id="slide7">
-            <h2 class="wiki-header">Порівняльна характеристика епох<span class="edit-link">[ред.]</span></h2>
+            <h2 class="wiki-header">Порівняльна характеристика епох</h2>
             <div class="overflow-x-auto shadow-2xl rounded-xl">
                 <table class="wiki-table">
                     <thead>
-                        <tr>
-                            <th>Період</th>
-                            <th>Джерела доходів</th>
-                            <th>Напрями витрат держави</th>
-                            <th>Види податків</th>
-                        </tr>
+                        <tr><th>Період</th><th>Джерела доходів</th><th>Напрями витрат</th><th>Види податків</th></tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><b>Давнина</b></td>
-                            <td>Врожаї, худоба, торгівля</td>
-                            <td>Храми, іригація, армія фараона</td>
-                            <td>Натуральні, мита</td>
-                        </tr>
-                        <tr>
-                            <td><b>Середньовіччя</b></td>
-                            <td>Праця селян, продукти, десятина</td>
-                            <td>Феодали, замки, війни, церква</td>
-                            <td>Рента, десятина, оброк</td>
-                        </tr>
-                        <tr>
-                            <td><b>Капіталізм</b></td>
-                            <td>Прибутки підприємств, торгівля</td>
-                            <td>Армія, залізниці, адмінресурс</td>
-                            <td>Акцизи, мита, прибуткові</td>
-                        </tr>
-                        <tr>
-                            <td><b>Сучасність</b></td>
-                            <td>ПДФО, ПДВ, Акцизи</td>
-                            <td>Медицина, IT, освіта, оборона</td>
-                            <td>Прямі, непрямі, цифрові</td>
-                        </tr>
+                        <tr><td><b>Давнина</b></td><td>Врожаї, худоба, торгівля</td><td>Храми, іригація, армія фараона</td><td>Натуральні, мита</td></tr>
+                        <tr><td><b>Середньовіччя</b></td><td>Праця селян, продукти, десятина</td><td>Феодали, замки, війни, церква</td><td>Рента, десятина, оброк</td></tr>
+                        <tr><td><b>Капіталізм</b></td><td>Прибутки підприємств, торгівля</td><td>Армія, залізниці, адмінресурс</td><td>Акцизи, мита, прибуткові</td></tr>
+                        <tr><td><b>Сучасність</b></td><td>ПДФО, ПДВ, Акцизи</td><td>Медицина, IT, освіта, оборона</td><td>Прямі, непрямі, цифрові</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Слайд 8: Джерела -->
+        <!-- Slide 8 -->
         <div class="wiki-card" id="slide8">
-            <h2 class="wiki-header">Список використаних джерел<span class="edit-link">[ред.]</span></h2>
+            <h2 class="wiki-header">Список використаних джерел</h2>
             <div class="report-section px-20 py-10">
                 <ol class="list-decimal space-y-10 text-3xl text-gray-800 italic">
                     <li>Податковий кодекс України № 2755-VI.</li>
@@ -468,26 +494,24 @@
                     <li>Податкова система / за ред. Волохової, 2019.</li>
                     <li>Томнюк Т. Л. Податкова система, 2022.</li>
                     <li>Фрадинський О. А., 2011.</li>
-                    <li>Шевчук Ж. А. Історія податків, 2008.</li>
-                    <li>Лекційний матеріал.</li>
+                    <li>Лекційний матеріал курсу.</li>
                 </ol>
-                <div class="author-sign mt-20">Автор презентації: <span class="text-black font-black uppercase">Трочин Вікторія</span></div>
             </div>
         </div>
 
-        <!-- Слайд 9: ФІНАЛ -->
+        <!-- Slide 9 -->
         <div class="wiki-card" id="slide9">
             <div class="thanks-container">
                 <div class="thanks-title">ДЯКУЮ ЗА УВАГУ!</div>
                 <div class="thanks-quote">
                     «Податки — це ціна за цивілізоване суспільство… <br>а посмішка після доповіді — теплий момент, який гріє душу»
                 </div>
-                <div class="final-image-wrapper">
+                <div class="final-img-box">
                     <img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&q=80&w=1200" alt="Позитивний фінал">
                 </div>
                 <div class="author-sign mt-10">
                     <div class="discipline-badge">Теорія податків та мита</div>
-                    <span class="text-black font-black uppercase tracking-widest ml-8">Трочин Вікторія</span>
+                    <span class="text-black font-black uppercase tracking-widest ml-10">Трочин Вікторія</span>
                 </div>
             </div>
         </div>
@@ -499,49 +523,50 @@
         const totalS = 9;
         let isThrottled = false;
 
+        // Повертаємо стандартний вказівник, але залишаємо логіку наведення
         function showSlide(n) {
             if (n < 1 || n > totalS) return;
             currentS = n;
-
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             const btns = document.querySelectorAll('.nav-btn');
             if (btns[n-1]) btns[n-1].classList.add('active');
-            
             document.querySelectorAll('.wiki-card').forEach(c => c.classList.remove('active'));
             const activeSlide = document.getElementById('slide'+n);
             if (activeSlide) {
                 activeSlide.classList.add('active');
                 activeSlide.scrollTop = 0;
             }
-
-            const progress = (n / totalS) * 100;
-            document.getElementById('progress-bar').style.width = progress + '%';
-
+            document.getElementById('progress-bar').style.width = (n / totalS) * 100 + '%';
             if (n === 9) spawnEmojis();
         }
 
-        // Розумна навігація коліщатком (з перевіркою скролу всередині карти)
+        function toggleBox(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+
+        // РОЗУМНА НАВІГАЦІЯ (Коліщатко)
         window.addEventListener('wheel', (e) => {
             const activeCard = document.querySelector('.wiki-card.active');
             if (!activeCard) return;
 
             const isAtTop = activeCard.scrollTop === 0;
-            const isAtBottom = Math.abs(activeCard.scrollHeight - activeCard.clientHeight - activeCard.scrollTop) < 5;
+            const isAtBottom = Math.abs(activeCard.scrollHeight - activeCard.clientHeight - activeCard.scrollTop) < 10;
 
             if (isThrottled) return;
 
             if (e.deltaY > 0 && isAtBottom) {
                 isThrottled = true;
                 showSlide(currentS + 1);
-                setTimeout(() => { isThrottled = false; }, 900);
+                setTimeout(() => { isThrottled = false; }, 1000);
             } else if (e.deltaY < 0 && isAtTop) {
                 isThrottled = true;
                 showSlide(currentS - 1);
-                setTimeout(() => { isThrottled = false; }, 900);
+                setTimeout(() => { isThrottled = false; }, 1000);
             }
-        });
+        }, { passive: false });
 
-        // Керування клавіатурою (Стрілки, Пробіл)
+        // КЛАВІАТУРА
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
                 e.preventDefault();
@@ -554,8 +579,8 @@
         });
 
         function spawnEmojis() {
-            const emojis = ['✨', '🌟', '💖', '💰', '🏛️', '🚀', '⭐', '🔥', '💎'];
-            for (let i = 0; i < 22; i++) {
+            const emojis = ['✨', '🌟', '💖', '💎', '💰', '🏛️', '🚀', '🔥'];
+            for (let i = 0; i < 25; i++) {
                 setTimeout(() => {
                     const span = document.createElement('span');
                     span.className = 'emoji-flyer';
@@ -569,34 +594,22 @@
             }
         }
 
-        // Анімація фону
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
-        function initCanvas() {
+        function initC() {
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             particles = [];
-            for (let i = 0; i < 65; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-                    size: Math.random() * 2.5 + 1, speed: Math.random() * 0.4 + 0.1
-                });
-            }
+            for (let i = 0; i < 70; i++) particles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*3+1, speed: Math.random()*0.5+0.1 });
         }
-
-        function animateCanvas() {
+        function animateC() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#00d2ff';
-            particles.forEach(p => {
-                p.y -= p.speed; if (p.y < 0) p.y = canvas.height;
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
-            });
-            requestAnimationFrame(animateCanvas);
+            particles.forEach(p => { p.y -= p.speed; if (p.y < 0) p.y = canvas.height; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); });
+            requestAnimationFrame(animateC);
         }
-
-        window.onresize = initCanvas;
-        window.onload = () => { initCanvas(); animateCanvas(); showSlide(1); };
+        window.onresize = initC;
+        window.onload = () => { initC(); animateC(); showSlide(1); };
 
         function toggleFullscreen() {
             if (!document.fullscreenElement) document.documentElement.requestFullscreen();
